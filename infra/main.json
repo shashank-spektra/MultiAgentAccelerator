@@ -64,9 +64,9 @@
         "azd": {
           "type": "location",
           "usageName": [
-            "OpenAI.GlobalStandard.gpt4.1, 150",
+            "OpenAI.GlobalStandard.gpt5.4, 150",
             "OpenAI.GlobalStandard.o4-mini, 50",
-            "OpenAI.GlobalStandard.gpt4.1-mini, 50"
+            "OpenAI.GlobalStandard.gpt5.4-mini, 50"
           ]
         },
         "description": "Required. Location for all AI service resources. This should be one of the supported Azure AI Service locations."
@@ -74,7 +74,7 @@
     },
     "gptModelName": {
       "type": "string",
-      "defaultValue": "gpt-4.1-mini",
+      "defaultValue": "gpt-5.4-mini",
       "minLength": 1,
       "metadata": {
         "description": "Optional. Name of the GPT model to deploy:"
@@ -82,14 +82,14 @@
     },
     "gptModelVersion": {
       "type": "string",
-      "defaultValue": "2025-04-14",
+      "defaultValue": "2026-03-17",
       "metadata": {
-        "description": "Optional. Version of the GPT model to deploy. Defaults to 2025-04-14."
+        "description": "Optional. Version of the GPT model to deploy. Defaults to 2026-03-17."
       }
     },
     "gpt4_1ModelName": {
       "type": "string",
-      "defaultValue": "gpt-4.1",
+      "defaultValue": "gpt-5.4",
       "minLength": 1,
       "metadata": {
         "description": "Optional. Name of the GPT model to deploy:"
@@ -97,9 +97,9 @@
     },
     "gpt4_1ModelVersion": {
       "type": "string",
-      "defaultValue": "2025-04-14",
+      "defaultValue": "2026-03-17",
       "metadata": {
-        "description": "Optional. Version of the GPT model to deploy. Defaults to 2025-04-14."
+        "description": "Optional. Version of the GPT model to deploy. Defaults to 2026-03-17."
       }
     },
     "gptReasoningModelName": {
@@ -30509,7 +30509,7 @@
                   },
                   {
                     "name": "SUPPORTED_MODELS",
-                    "value": "[[\"o3\",\"o4-mini\",\"gpt-4.1\",\"gpt-4.1-mini\"]"
+                    "value": "[[\"o3\",\"o4-mini\",\"gpt-5.4\",\"gpt-5.4-mini\"]"
                   },
                   {
                     "name": "AZURE_AI_SEARCH_API_KEY",
@@ -48028,7 +48028,7 @@
     },
     "SUPPORTED_MODELS": {
       "type": "string",
-      "value": "[[\"o3\",\"o4-mini\",\"gpt-4.1\",\"gpt-4.1-mini\"]"
+      "value": "[[\"o3\",\"o4-mini\",\"gpt-5.4\",\"gpt-5.4-mini\"]"
     },
     "AZURE_AI_SEARCH_API_KEY": {
       "type": "string",

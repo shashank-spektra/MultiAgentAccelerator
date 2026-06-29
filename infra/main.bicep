@@ -40,9 +40,9 @@ var deployingUserPrincipalId = deployerInfo.objectId
   azd: {
     type: 'location'
     usageName: [
-      'OpenAI.GlobalStandard.gpt4.1, 50'
+      'OpenAI.GlobalStandard.gpt-5.4, 50'
       'OpenAI.GlobalStandard.o4-mini, 50'
-      'OpenAI.GlobalStandard.gpt4.1-mini, 50'
+      'OpenAI.GlobalStandard.gpt-5.4-mini, 50'
     ]
   }
 })
@@ -53,14 +53,14 @@ param azureAiServiceLocation string
 @description('Optional. Name of the GPT model to deploy:')
 param gptModelName string = 'gpt-5.4-mini'
 
-@description('Optional. Version of the GPT model to deploy. Defaults to 2025-04-14.')
+@description('Optional. Version of the GPT model to deploy. Defaults to 2026-03-17.')
 param gptModelVersion string = '2026-03-17'
 
 @minLength(1)
 @description('Optional. Name of the GPT model to deploy:')
 param gpt4_1ModelName string = 'gpt-5.4'
 
-@description('Optional. Version of the GPT model to deploy. Defaults to 2025-04-14.')
+@description('Optional. Version of the GPT model to deploy. Defaults to 2026-03-17.')
 param gpt4_1ModelVersion string = '2026-03-05'
 
 @minLength(1)
@@ -1325,7 +1325,7 @@ module containerApp 'br/public:avm/res/app/container-app:0.18.1' = {
           }
           {
             name: 'SUPPORTED_MODELS'
-            value: '["o3","o4-mini","gpt-4.1","gpt-4.1-mini"]'
+            value: '["o3","o4-mini","gpt-5.4","gpt-5.4-mini"]'
           }
           {
             name: 'AZURE_AI_SEARCH_API_KEY'
@@ -1849,7 +1849,7 @@ output AZURE_COGNITIVE_SERVICES string = 'https://cognitiveservices.azure.com/.d
 output REASONING_MODEL_NAME string = aiFoundryAiServicesReasoningModelDeployment.name
 output MCP_SERVER_NAME string = 'MacaeMcpServer'
 output MCP_SERVER_DESCRIPTION string = 'MCP server with greeting, HR, and planning tools'
-output SUPPORTED_MODELS string = '["o3","o4-mini","gpt-4.1","gpt-4.1-mini"]'
+output SUPPORTED_MODELS string = '["o3","o4-mini","gpt-5.4","gpt-5.4-mini"]'
 output AZURE_AI_SEARCH_API_KEY string = '<Deployed-Search-ApiKey>'
 output BACKEND_URL string = 'https://${containerApp.outputs.fqdn}'
 output AZURE_AI_PROJECT_ENDPOINT string = aiFoundryAiProjectEndpoint

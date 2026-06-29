@@ -27,7 +27,7 @@ sys.path.insert(0, src_path)
 os.environ.setdefault("APPLICATIONINSIGHTS_CONNECTION_STRING", "test_connection_string")
 os.environ.setdefault("APP_ENV", "test")
 os.environ.setdefault("AZURE_OPENAI_DEPLOYMENT_NAME", "test-gpt-4o")
-os.environ.setdefault("AZURE_OPENAI_RAI_DEPLOYMENT_NAME", "test-gpt-4.1")
+os.environ.setdefault("AZURE_OPENAI_RAI_DEPLOYMENT_NAME", "test-gpt-5.4")
 os.environ.setdefault("AZURE_OPENAI_API_VERSION", "2024-11-20")
 os.environ.setdefault("AZURE_OPENAI_ENDPOINT", "https://test.openai.azure.com")
 os.environ.setdefault("AZURE_AI_SUBSCRIPTION_ID", "test-subscription-id")
@@ -50,7 +50,7 @@ class TestAppConfigInitialization:
             "APPLICATIONINSIGHTS_CONNECTION_STRING": "test_connection_string",
             "APP_ENV": "test",
             "AZURE_OPENAI_DEPLOYMENT_NAME": "test-gpt-4o",
-            "AZURE_OPENAI_RAI_DEPLOYMENT_NAME": "test-gpt-4.1",
+            "AZURE_OPENAI_RAI_DEPLOYMENT_NAME": "test-gpt-5.4",
             "AZURE_OPENAI_API_VERSION": "2024-11-20",
             "AZURE_OPENAI_ENDPOINT": "https://test.openai.azure.com",
             "AZURE_AI_SUBSCRIPTION_ID": "test-subscription-id",
@@ -87,7 +87,7 @@ class TestAppConfigInitialization:
             "APPLICATIONINSIGHTS_CONNECTION_STRING": "test_connection_string",
             "APP_ENV": "prod",
             "AZURE_OPENAI_DEPLOYMENT_NAME": "custom-gpt-4o",
-            "AZURE_OPENAI_RAI_DEPLOYMENT_NAME": "custom-gpt-4.1",
+            "AZURE_OPENAI_RAI_DEPLOYMENT_NAME": "custom-gpt-5.4",
             "AZURE_OPENAI_API_VERSION": "2024-11-20",
             "AZURE_OPENAI_ENDPOINT": "https://custom.openai.azure.com",
             "AZURE_AI_SUBSCRIPTION_ID": "custom-subscription-id",
@@ -117,7 +117,7 @@ class TestAppConfigInitialization:
         incomplete_env = {
             "APP_ENV": "test",
             "AZURE_OPENAI_DEPLOYMENT_NAME": "test-gpt-4o",
-            "AZURE_OPENAI_RAI_DEPLOYMENT_NAME": "test-gpt-4.1",
+            "AZURE_OPENAI_RAI_DEPLOYMENT_NAME": "test-gpt-5.4",
             "AZURE_OPENAI_API_VERSION": "2024-11-20",
             "AZURE_OPENAI_ENDPOINT": "https://test.openai.azure.com",
             "AZURE_AI_SUBSCRIPTION_ID": "test-subscription-id",
@@ -144,7 +144,7 @@ class TestAppConfigInitialization:
             "APPLICATIONINSIGHTS_CONNECTION_STRING": "test_connection_string",
             "APP_ENV": "test",
             "AZURE_OPENAI_DEPLOYMENT_NAME": "test-gpt-4o",
-            "AZURE_OPENAI_RAI_DEPLOYMENT_NAME": "test-gpt-4.1",
+            "AZURE_OPENAI_RAI_DEPLOYMENT_NAME": "test-gpt-5.4",
             "AZURE_OPENAI_API_VERSION": "2024-11-20",
             "AZURE_OPENAI_ENDPOINT": "https://test.openai.azure.com",
             "AZURE_AI_SUBSCRIPTION_ID": "test-subscription-id",
@@ -168,7 +168,7 @@ class TestAppConfigPrivateMethods:
             "APPLICATIONINSIGHTS_CONNECTION_STRING": "test_connection_string",
             "APP_ENV": "test",
             "AZURE_OPENAI_DEPLOYMENT_NAME": "test-gpt-4o",
-            "AZURE_OPENAI_RAI_DEPLOYMENT_NAME": "test-gpt-4.1",
+            "AZURE_OPENAI_RAI_DEPLOYMENT_NAME": "test-gpt-5.4",
             "AZURE_OPENAI_API_VERSION": "2024-11-20",
             "AZURE_OPENAI_ENDPOINT": "https://test.openai.azure.com",
             "AZURE_AI_SUBSCRIPTION_ID": "test-subscription-id",
@@ -243,7 +243,7 @@ class TestAppConfigCredentials:
             "APPLICATIONINSIGHTS_CONNECTION_STRING": "test_connection_string",
             "APP_ENV": "dev",
             "AZURE_OPENAI_DEPLOYMENT_NAME": "test-gpt-4o",
-            "AZURE_OPENAI_RAI_DEPLOYMENT_NAME": "test-gpt-4.1",
+            "AZURE_OPENAI_RAI_DEPLOYMENT_NAME": "test-gpt-5.4",
             "AZURE_OPENAI_API_VERSION": "2024-11-20",
             "AZURE_OPENAI_ENDPOINT": "https://test.openai.azure.com",
             "AZURE_AI_SUBSCRIPTION_ID": "test-subscription-id",
@@ -346,7 +346,7 @@ class TestAppConfigClientMethods:
             "APPLICATIONINSIGHTS_CONNECTION_STRING": "test_connection_string",
             "APP_ENV": "dev",
             "AZURE_OPENAI_DEPLOYMENT_NAME": "test-gpt-4o",
-            "AZURE_OPENAI_RAI_DEPLOYMENT_NAME": "test-gpt-4.1",
+            "AZURE_OPENAI_RAI_DEPLOYMENT_NAME": "test-gpt-5.4",
             "AZURE_OPENAI_API_VERSION": "2024-11-20",
             "AZURE_OPENAI_ENDPOINT": "https://test.openai.azure.com",
             "AZURE_AI_SUBSCRIPTION_ID": "test-subscription-id",
@@ -508,7 +508,7 @@ class TestAppConfigUtilityMethods:
             "APPLICATIONINSIGHTS_CONNECTION_STRING": "test_connection_string",
             "APP_ENV": "dev",
             "AZURE_OPENAI_DEPLOYMENT_NAME": "test-gpt-4o",
-            "AZURE_OPENAI_RAI_DEPLOYMENT_NAME": "test-gpt-4.1",
+            "AZURE_OPENAI_RAI_DEPLOYMENT_NAME": "test-gpt-5.4",
             "AZURE_OPENAI_API_VERSION": "2024-11-20",
             "AZURE_OPENAI_ENDPOINT": "https://test.openai.azure.com",
             "AZURE_AI_SUBSCRIPTION_ID": "test-subscription-id",
@@ -566,7 +566,7 @@ class TestAppConfigIntegration:
             "APPLICATIONINSIGHTS_CONNECTION_STRING": "test_connection_string",
             "APP_ENV": "prod",
             "AZURE_OPENAI_DEPLOYMENT_NAME": "prod-gpt-4o",
-            "AZURE_OPENAI_RAI_DEPLOYMENT_NAME": "prod-gpt-4.1",
+            "AZURE_OPENAI_RAI_DEPLOYMENT_NAME": "prod-gpt-5.4",
             "AZURE_OPENAI_API_VERSION": "2024-11-20",
             "AZURE_OPENAI_ENDPOINT": "https://prod.openai.azure.com",
             "AZURE_AI_SUBSCRIPTION_ID": "prod-subscription-id",
