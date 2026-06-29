@@ -51,17 +51,17 @@ param azureAiServiceLocation string
 
 @minLength(1)
 @description('Optional. Name of the GPT model to deploy:')
-param gptModelName string = 'gpt-4.1-mini'
+param gptModelName string = 'gpt-5.4-mini'
 
 @description('Optional. Version of the GPT model to deploy. Defaults to 2025-04-14.')
-param gptModelVersion string = '2025-04-14'
+param gptModelVersion string = '2026-03-17'
 
 @minLength(1)
 @description('Optional. Name of the GPT model to deploy:')
-param gpt4_1ModelName string = 'gpt-4.1'
+param gpt4_1ModelName string = 'gpt-5.4'
 
 @description('Optional. Version of the GPT model to deploy. Defaults to 2025-04-14.')
-param gpt4_1ModelVersion string = '2025-04-14'
+param gpt4_1ModelVersion string = '2026-03-05'
 
 @minLength(1)
 @description('Optional. Name of the GPT Reasoning model to deploy:')
