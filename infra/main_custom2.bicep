@@ -1,4 +1,4 @@
-// // ========== main_custom.bicep ========== //
+// // ========== main.bicep ========== //
 targetScope = 'resourceGroup'
 
 metadata name = 'Multi-Agent Custom Automation Engine'
@@ -40,7 +40,7 @@ var deployingUserPrincipalId = deployerInfo.objectId
   azd: {
     type: 'location'
     usageName: [
-      'OpenAI.GlobalStandard.gpt-5.4, 150'
+      'OpenAI.GlobalStandard.gpt-5.4, 50'
       'OpenAI.GlobalStandard.o4-mini, 50'
       'OpenAI.GlobalStandard.gpt-5.4-mini, 50'
     ]
@@ -61,7 +61,7 @@ param gptModelVersion string = '2026-03-17'
 param gpt4_1ModelName string = 'gpt-5.4'
 
 @description('Optional. Version of the GPT model to deploy. Defaults to 2026-03-17.')
-param gpt4_1ModelVersion string = '2026-03-17'
+param gpt4_1ModelVersion string = '2026-03-05'
 
 @minLength(1)
 @description('Optional. Name of the GPT Reasoning model to deploy:')
@@ -70,7 +70,7 @@ param gptReasoningModelName string = 'o4-mini'
 @description('Optional. Version of the GPT Reasoning model to deploy. Defaults to 2025-04-16.')
 param gptReasoningModelVersion string = '2025-04-16'
 
-@description('Optional. Version of the Azure OpenAI service to deploy. Defaults to 2025-01-01-preview.')
+@description('Optional. Version of the Azure OpenAI service to deploy. Defaults to 2024-12-01-preview.')
 param azureopenaiVersion string = '2024-12-01-preview'
 
 @description('Optional. Version of the Azure AI Agent API version. Defaults to 2025-01-01-preview.')
@@ -103,8 +103,8 @@ param gptReasoningModelDeploymentType string = 'GlobalStandard'
 @description('Optional. AI model deployment token capacity. Defaults to 50 for optimal performance.')
 param gptModelCapacity int = 50
 
-@description('Optional. AI model deployment token capacity. Defaults to 150 for optimal performance.')
-param gpt4_1ModelCapacity int = 150
+@description('Optional. AI model deployment token capacity. Defaults to 50 for optimal performance.')
+param gpt4_1ModelCapacity int = 50
 
 @description('Optional. AI model deployment token capacity. Defaults to 50 for optimal performance.')
 param gptReasoningModelCapacity int = 50
@@ -131,9 +131,10 @@ param virtualMachineAdminUsername string?
 @description('Optional. The password for the administrator account of the virtual machine. Allows to customize credentials if `enablePrivateNetworking` is set to true.')
 @secure()
 param virtualMachineAdminPassword string?
+
 // These parameters are changed for testing - please reset as part of publication
 
-@description('Optional. The Container Registry hostname where the docker images for the backend are located.')
+@description('Optional. The Container Registry hostname where the docker images for the backend are located. Provide the created ACR login server after the registry is created.')
 param backendContainerRegistryHostname string = 'biabcontainerreg.azurecr.io'
 
 @description('Optional. The Container Image Name to deploy on the backend.')
@@ -142,7 +143,7 @@ param backendContainerImageName string = 'macaebackend'
 @description('Optional. The Container Image Tag to deploy on the backend.')
 param backendContainerImageTag string = 'latest_v4'
 
-@description('Optional. The Container Registry hostname where the docker images for the frontend are located.')
+@description('Optional. The Container Registry hostname where the docker images for the frontend are located. Provide the created ACR login server after the registry is created.')
 param frontendContainerRegistryHostname string = 'biabcontainerreg.azurecr.io'
 
 @description('Optional. The Container Image Name to deploy on the frontend.')
@@ -151,7 +152,7 @@ param frontendContainerImageName string = 'macaefrontend'
 @description('Optional. The Container Image Tag to deploy on the frontend.')
 param frontendContainerImageTag string = 'latest_v4'
 
-@description('Optional. The Container Registry hostname where the docker images for the MCP are located.')
+@description('Optional. The Container Registry hostname where the docker images for the MCP are located. Provide the created ACR login server after the registry is created.')
 param MCPContainerRegistryHostname string = 'biabcontainerreg.azurecr.io'
 
 @description('Optional. The Container Image Name to deploy on the MCP.')
@@ -234,6 +235,7 @@ resource resourceGroupTags 'Microsoft.Resources/tags@2021-04-01' = {
   name: 'default'
   properties: {
     tags: {
+      ...resourceGroup().tags
       ...allTags
       TemplateName: 'MACAE'
       Type: enablePrivateNetworking ? 'WAF' : 'Non-WAF'
@@ -1156,35 +1158,6 @@ module containerAppEnvironment 'br/public:avm/res/app/managed-environment:0.11.2
   }
 }
 
-// ========== Container Registry ========== //
-module containerRegistry 'br/public:avm/res/container-registry/registry:0.9.1' = {
-  name: 'registryDeployment'
-  params: {
-    name: 'cr${solutionSuffix}'
-    acrAdminUserEnabled: false
-    acrSku: 'Basic'
-    azureADAuthenticationAsArmPolicyStatus: 'enabled'
-    exportPolicyStatus: 'enabled'
-    location: location
-    softDeletePolicyDays: 7
-    softDeletePolicyStatus: 'disabled'
-    tags: tags
-    networkRuleBypassOptions: 'AzureServices'
-    roleAssignments: [
-      {
-        roleDefinitionIdOrName: acrPullRole
-        principalType: 'ServicePrincipal'
-        principalId: userAssignedIdentity.outputs.principalId
-      }
-    ]
-  }
-}
-
-var acrPullRole = subscriptionResourceId(
-  'Microsoft.Authorization/roleDefinitions',
-  '7f951dda-4ed3-4680-a7ca-43fe172d538d'
-)
-
 // ========== Backend Container App Service ========== //
 // WAF best practices for container apps: https://learn.microsoft.com/en-us/azure/well-architected/service-guides/azure-container-apps
 // PSRule for Container App: https://azure.github.io/PSRule.Rules.Azure/en/rules/resource/#container-app
@@ -1193,7 +1166,7 @@ module containerApp 'br/public:avm/res/app/container-app:0.18.1' = {
   name: take('avm.res.app.container-app.${containerAppResourceName}', 64)
   params: {
     name: containerAppResourceName
-    tags: union(tags, { 'azd-service-name': 'backend' })
+    tags: tags
     location: location
     enableTelemetry: enableTelemetry
     environmentResourceId: containerAppEnvironment.outputs.resourceId
@@ -1229,17 +1202,10 @@ module containerApp 'br/public:avm/res/app/container-app:0.18.1' = {
         }
       ]
     }
-    registries: [
-      {
-        server: containerRegistry.outputs.loginServer
-        identity: userAssignedIdentity.outputs.resourceId
-      }
-    ]
     containers: [
       {
         name: 'backend'
-        //image: '${backendContainerRegistryHostname}/${backendContainerImageName}:${backendContainerImageTag}'
-        image: 'mcr.microsoft.com/azuredocs/containerapps-helloworld:latest'
+        image: '${backendContainerRegistryHostname}/${backendContainerImageName}:${backendContainerImageTag}'
         resources: {
           cpu: '2.0'
           memory: '4.0Gi'
@@ -1370,10 +1336,6 @@ module containerApp 'br/public:avm/res/app/container-app:0.18.1' = {
             value: avmStorageAccount.outputs.serviceEndpoints.blob
           }
           {
-            name: 'AZURE_AI_MODEL_DEPLOYMENT_NAME'
-            value: aiFoundryAiServicesModelDeployment.name
-          }
-          {
             name: 'AZURE_AI_PROJECT_ENDPOINT'
             value: aiFoundryAiProjectEndpoint
           }
@@ -1388,10 +1350,6 @@ module containerApp 'br/public:avm/res/app/container-app:0.18.1' = {
           {
             name: 'AZURE_AI_AGENT_PROJECT_CONNECTION_STRING'
             value: '${aiFoundryAiServicesResourceName}.services.ai.azure.com;${aiFoundryAiServicesSubscriptionId};${aiFoundryAiServicesResourceGroupName};${aiFoundryAiProjectResourceName}'
-          }
-           {
-            name: 'AZURE_DEV_COLLECT_TELEMETRY'
-            value: 'no'
           }
           {
             name: 'AZURE_BASIC_LOGGING_LEVEL'
@@ -1426,7 +1384,7 @@ module containerAppMcp 'br/public:avm/res/app/container-app:0.18.1' = {
   name: take('avm.res.app.container-app.${containerAppMcpResourceName}', 64)
   params: {
     name: containerAppMcpResourceName
-    tags: union(tags, { 'azd-service-name': 'mcp' })
+    tags: tags
     location: location
     enableTelemetry: enableTelemetry
     environmentResourceId: containerAppEnvironment.outputs.resourceId
@@ -1455,17 +1413,10 @@ module containerAppMcp 'br/public:avm/res/app/container-app:0.18.1' = {
         }
       ]
     }
-    registries: [
-      {
-        server: containerRegistry.outputs.loginServer
-        identity: userAssignedIdentity.outputs.resourceId
-      }
-    ]
     containers: [
       {
         name: 'mcp'
-        //image: '${backendContainerRegistryHostname}/${backendContainerImageName}:${backendContainerImageTag}'
-        image: 'mcr.microsoft.com/azuredocs/containerapps-helloworld:latest'
+        image: '${MCPContainerRegistryHostname}/${MCPContainerImageName}:${MCPContainerImageTag}'
         resources: {
           cpu: '2.0'
           memory: '4.0Gi'
@@ -1554,27 +1505,24 @@ module webSite 'modules/web-sites.bicep' = {
   name: take('module.web-sites.${webSiteResourceName}', 64)
   params: {
     name: webSiteResourceName
-    tags: union(tags, { 'azd-service-name': 'frontend' })
+    tags: tags
     location: location
-    kind: 'app,linux'
+    kind: 'app,linux,container'
     serverFarmResourceId: webServerFarm.?outputs.resourceId
     siteConfig: {
-      //linuxFxVersion: 'DOCKER|${frontendContainerRegistryHostname}/${frontendContainerImageName}:${frontendContainerImageTag}'
+      linuxFxVersion: 'DOCKER|${frontendContainerRegistryHostname}/${frontendContainerImageName}:${frontendContainerImageTag}'
       minTlsVersion: '1.2'
-      linuxFxVersion: 'python|3.11'
-      appCommandLine: 'python3 -m uvicorn frontend_server:app --host 0.0.0.0 --port 8000'
     }
     configs: [
       {
         name: 'appsettings'
         properties: {
-          SCM_DO_BUILD_DURING_DEPLOYMENT: 'True'
-          //DOCKER_REGISTRY_SERVER_URL: 'https://${frontendContainerRegistryHostname}'
-          WEBSITES_PORT: '8000'
-          //WEBSITES_CONTAINER_START_TIME_LIMIT: '1800' // 30 minutes, adjust as needed
+          SCM_DO_BUILD_DURING_DEPLOYMENT: 'true'
+          DOCKER_REGISTRY_SERVER_URL: 'https://${frontendContainerRegistryHostname}'
+          WEBSITES_PORT: '3000'
+          WEBSITES_CONTAINER_START_TIME_LIMIT: '1800' // 30 minutes, adjust as needed
           BACKEND_API_URL: 'https://${containerApp.outputs.fqdn}'
           AUTH_ENABLED: 'false'
-          ENABLE_ORYX_BUILD: 'True'
         }
         // WAF aligned configuration for Monitoring
         applicationInsightResourceId: enableMonitoring ? applicationInsights!.outputs.resourceId : null
@@ -1702,7 +1650,6 @@ module avmStorageAccount 'br/public:avm/res/storage/storage-account:0.20.0' = {
 // ========== Search Service ========== //
 
 var searchServiceName = 'srch-${solutionSuffix}'
-var aiSearchIndexName = 'sample-dataset-index'
 var aiSearchIndexNameForContractSummary = 'contract-summary-doc-index'
 var aiSearchIndexNameForContractRisk = 'contract-risk-doc-index'
 var aiSearchIndexNameForContractCompliance = 'contract-compliance-doc-index'
@@ -1886,7 +1833,6 @@ output AZURE_OPENAI_API_VERSION string = azureopenaiVersion
 output AZURE_AI_SUBSCRIPTION_ID string = subscription().subscriptionId
 output AZURE_AI_RESOURCE_GROUP string = resourceGroup().name
 output AZURE_AI_PROJECT_NAME string = aiFoundryAiProjectName
-output AZURE_AI_MODEL_DEPLOYMENT_NAME string = aiFoundryAiServicesModelDeployment.name
 // output APPLICATIONINSIGHTS_CONNECTION_STRING string = applicationInsights.outputs.connectionString
 output AZURE_AI_AGENT_MODEL_DEPLOYMENT_NAME string = aiFoundryAiServicesModelDeployment.name
 // output AZURE_AI_AGENT_ENDPOINT string = aiFoundryAiProjectEndpoint
@@ -1910,7 +1856,6 @@ output AZURE_AI_PROJECT_ENDPOINT string = aiFoundryAiProjectEndpoint
 output AZURE_AI_AGENT_ENDPOINT string = aiFoundryAiProjectEndpoint
 output AZURE_AI_AGENT_API_VERSION string = azureAiAgentAPIVersion
 output AZURE_AI_AGENT_PROJECT_CONNECTION_STRING string = '${aiFoundryAiServicesResourceName}.services.ai.azure.com;${aiFoundryAiServicesSubscriptionId};${aiFoundryAiServicesResourceGroupName};${aiFoundryAiProjectResourceName}'
-output AZURE_DEV_COLLECT_TELEMETRY  string = 'no'
 
 
 output AZURE_STORAGE_CONTAINER_NAME_RETAIL_CUSTOMER string = storageContainerNameRetailCustomer
@@ -1929,8 +1874,4 @@ output AZURE_AI_SEARCH_INDEX_NAME_RFP_COMPLIANCE string = aiSearchIndexNameForRF
 output AZURE_AI_SEARCH_INDEX_NAME_CONTRACT_SUMMARY string = aiSearchIndexNameForContractSummary
 output AZURE_AI_SEARCH_INDEX_NAME_CONTRACT_RISK string = aiSearchIndexNameForContractRisk
 output AZURE_AI_SEARCH_INDEX_NAME_CONTRACT_COMPLIANCE string = aiSearchIndexNameForContractCompliance
-
-// Container Registry Outputs
-output AZURE_CONTAINER_REGISTRY_ENDPOINT string = containerRegistry.outputs.loginServer
-output AZURE_CONTAINER_REGISTRY_NAME string = containerRegistry.outputs.name
 

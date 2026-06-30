@@ -5,11 +5,11 @@
   "metadata": {
     "_generator": {
       "name": "bicep",
-      "version": "0.39.26.7824",
-      "templateHash": "4343709482796648658"
+      "version": "0.44.1.10279",
+      "templateHash": "2976083540636640232"
     },
     "name": "Multi-Agent Custom Automation Engine",
-    "description": "This module contains the resources required to deploy the [Multi-Agent Custom Automation Engine solution accelerator](https://github.com/microsoft/Multi-Agent-Custom-Automation-Engine-Solution-Accelerator) for both Sandbox environments and WAF aligned environments.\r\n\r\n> **Note:** This module is not intended for broad, generic use, as it was designed by the Commercial Solution Areas CTO team, as a Microsoft Solution Accelerator. Feature requests and bug fix requests are welcome if they support the needs of this organization but may not be incorporated if they aim to make this module more generic than what it needs to be for its primary use case. This module will likely be updated to leverage AVM resource modules in the future. This may result in breaking changes in upcoming versions when these features are implemented.\r\n"
+    "description": "This module contains the resources required to deploy the [Multi-Agent Custom Automation Engine solution accelerator](https://github.com/microsoft/Multi-Agent-Custom-Automation-Engine-Solution-Accelerator) for both Sandbox environments and WAF aligned environments.\n\n> **Note:** This module is not intended for broad, generic use, as it was designed by the Commercial Solution Areas CTO team, as a Microsoft Solution Accelerator. Feature requests and bug fix requests are welcome if they support the needs of this organization but may not be incorporated if they aim to make this module more generic than what it needs to be for its primary use case. This module will likely be updated to leverage AVM resource modules in the future. This may result in breaking changes in upcoming versions when these features are implemented.\n"
   },
   "parameters": {
     "solutionName": {
@@ -64,9 +64,9 @@
         "azd": {
           "type": "location",
           "usageName": [
-            "OpenAI.GlobalStandard.gpt5.4, 150",
+            "OpenAI.GlobalStandard.gpt-5.4, 50",
             "OpenAI.GlobalStandard.o4-mini, 50",
-            "OpenAI.GlobalStandard.gpt5.4-mini, 50"
+            "OpenAI.GlobalStandard.gpt-5.4-mini, 50"
           ]
         },
         "description": "Required. Location for all AI service resources. This should be one of the supported Azure AI Service locations."
@@ -97,7 +97,7 @@
     },
     "gpt4_1ModelVersion": {
       "type": "string",
-      "defaultValue": "2026-03-17",
+      "defaultValue": "2026-03-05",
       "metadata": {
         "description": "Optional. Version of the GPT model to deploy. Defaults to 2026-03-17."
       }
@@ -176,9 +176,9 @@
     },
     "gpt4_1ModelCapacity": {
       "type": "int",
-      "defaultValue": 150,
+      "defaultValue": 50,
       "metadata": {
-        "description": "Optional. AI model deployment token capacity. Defaults to 150 for optimal performance."
+        "description": "Optional. AI model deployment token capacity. Defaults to 50 for optimal performance."
       }
     },
     "gptReasoningModelCapacity": {
@@ -244,7 +244,7 @@
       "type": "string",
       "defaultValue": "biabcontainerreg.azurecr.io",
       "metadata": {
-        "description": "Optional. The Container Registry hostname where the docker images for the backend are located."
+        "description": "Optional. The Container Registry hostname where the docker images for the backend are located. Provide the created ACR login server after the registry is created."
       }
     },
     "backendContainerImageName": {
@@ -265,7 +265,7 @@
       "type": "string",
       "defaultValue": "biabcontainerreg.azurecr.io",
       "metadata": {
-        "description": "Optional. The Container Registry hostname where the docker images for the frontend are located."
+        "description": "Optional. The Container Registry hostname where the docker images for the frontend are located. Provide the created ACR login server after the registry is created."
       }
     },
     "frontendContainerImageName": {
@@ -286,7 +286,7 @@
       "type": "string",
       "defaultValue": "biabcontainerreg.azurecr.io",
       "metadata": {
-        "description": "Optional. The Container Registry hostname where the docker images for the MCP are located."
+        "description": "Optional. The Container Registry hostname where the docker images for the MCP are located. Provide the created ACR login server after the registry is created."
       }
     },
     "MCPContainerImageName": {
@@ -4911,8 +4911,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.39.26.7824",
-              "templateHash": "17693629099431521233"
+              "version": "0.44.1.10279",
+              "templateHash": "15378480928367949502"
             }
           },
           "definitions": {
@@ -22443,8 +22443,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.39.26.7824",
-              "templateHash": "7473169155225322335"
+              "version": "0.44.1.10279",
+              "templateHash": "8388310902652207735"
             }
           },
           "definitions": {
@@ -22751,7 +22751,7 @@
               },
               "type": "Microsoft.Authorization/roleAssignments",
               "apiVersion": "2022-04-01",
-              "scope": "[format('Microsoft.CognitiveServices/accounts/{0}', parameters('name'))]",
+              "scope": "[resourceId('Microsoft.CognitiveServices/accounts', parameters('name'))]",
               "name": "[coalesce(tryGet(coalesce(variables('formattedRoleAssignments'), createArray())[copyIndex()], 'name'), guid(resourceId('Microsoft.CognitiveServices/accounts', parameters('name')), coalesce(variables('formattedRoleAssignments'), createArray())[copyIndex()].principalId, coalesce(variables('formattedRoleAssignments'), createArray())[copyIndex()].roleDefinitionId))]",
               "properties": {
                 "roleDefinitionId": "[coalesce(variables('formattedRoleAssignments'), createArray())[copyIndex()].roleDefinitionId]",
@@ -25431,8 +25431,8 @@
       },
       "dependsOn": [
         "[format('avmPrivateDnsZones[{0}]', variables('dnsZoneIndex').aiServices)]",
-        "[format('avmPrivateDnsZones[{0}]', variables('dnsZoneIndex').cognitiveServices)]",
         "[format('avmPrivateDnsZones[{0}]', variables('dnsZoneIndex').openAI)]",
+        "[format('avmPrivateDnsZones[{0}]', variables('dnsZoneIndex').cognitiveServices)]",
         "logAnalyticsWorkspace",
         "userAssignedIdentity",
         "virtualNetwork"
@@ -25471,8 +25471,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.39.26.7824",
-              "templateHash": "13634050148372048883"
+              "version": "0.44.1.10279",
+              "templateHash": "16726486764770261194"
             }
           },
           "parameters": {
@@ -34462,8 +34462,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.39.26.7824",
-              "templateHash": "13074777962389399773"
+              "version": "0.44.1.10279",
+              "templateHash": "10032876662222912690"
             }
           },
           "definitions": {
@@ -35400,7 +35400,7 @@
               },
               "type": "Microsoft.Insights/diagnosticSettings",
               "apiVersion": "2021-05-01-preview",
-              "scope": "[format('Microsoft.Web/sites/{0}', parameters('name'))]",
+              "scope": "[resourceId('Microsoft.Web/sites', parameters('name'))]",
               "name": "[coalesce(tryGet(coalesce(parameters('diagnosticSettings'), createArray())[copyIndex()], 'name'), format('{0}-diagnosticSettings', parameters('name')))]",
               "properties": {
                 "copy": [
@@ -35475,8 +35475,8 @@
                   "metadata": {
                     "_generator": {
                       "name": "bicep",
-                      "version": "0.39.26.7824",
-                      "templateHash": "11666262061409473778"
+                      "version": "0.44.1.10279",
+                      "templateHash": "13783254618840971873"
                     },
                     "name": "Site App Settings",
                     "description": "This module deploys a Site App Setting."
@@ -44654,8 +44654,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.39.26.7824",
-              "templateHash": "13854536965493424643"
+              "version": "0.44.1.10279",
+              "templateHash": "903902924827477021"
             }
           },
           "parameters": {
